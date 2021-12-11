@@ -1,0 +1,2 @@
+# Pysynth
+Python midi synthesizer
