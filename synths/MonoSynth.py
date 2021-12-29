@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import math
 import numpy as np
@@ -95,16 +94,3 @@ if __name__=="__main__":
     #synth = MonoSynth(n=4, waveforms=[1, 1, 1, 1], freq_coef=[1, 2, 3, 4], amps=[0.25, 1, 0.125, 0.025], phases = [0, 0, 0, 0])
     synth = MonoSynth(**piano)
     synth.main()
-
-
-
- 
-
-
-
-
-
-
-
-
-

@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import math
 import numpy as np
@@ -109,16 +108,3 @@ if __name__=="__main__":
     synth = PolySynth(**piano)
     synth.show(1)
     synth.main()
-
-
-
- 
-
-
-
-
-
-
-
-
-

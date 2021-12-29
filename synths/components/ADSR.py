@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import math
 import numpy as np
@@ -82,4 +81,3 @@ class ADSR:
 
         plt.plot(x, y)
         plt.show()
-
