@@ -1,9 +1,11 @@
 import pygame.midi as pgm
 
+## This class is used to catch midi input from the keyboard. It uses the pygame.midi library.
+
 class Midi_Input:
     def __init__(self):
         pgm.init()
-        self._device_id = pgm.get_default_input_id()
+        self._device_id = pgm.get_default_input_id() 
         self._input = pgm.Input(self._device_id)
         self._note = 0
         self._velocity = 0
