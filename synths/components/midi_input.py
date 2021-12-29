@@ -16,7 +16,6 @@ class Midi_Input:
             (status, note, velocity, _) = input[0][0]
             self._note = pgm.midi_to_frequency(note)
             self._velocity = velocity
-            print(self._note, self._velocity)
         else:
             self._velocity = 0
             self._note = 0
