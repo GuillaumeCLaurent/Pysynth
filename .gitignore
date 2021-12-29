@@ -1,0 +1,4 @@
+Tests
+.vscode
+*.pyc
+*.whl
