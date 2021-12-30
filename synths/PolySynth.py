@@ -26,7 +26,9 @@ class PolySynth:
         self._i = 0
         self._freqs = np.zeros(m)
         self._adsrs = [adsr.copy() for _ in range(m)]
-        self._midi_input = Midi_Input()
+        self._midi_input = Midi_Input(is_for_control=False)
+        #self._control_input = Midi_Input(is_for_control=True)
+        self._update_dict = {18: self.update_adsr_a, 19: self.update_adsr_d, 16: self.update_adsr_s, 17:self.update_adsr_r}
         self._stream = pyaudio.PyAudio().open(
         rate=self._sample_rate,
         channels=1,
@@ -34,22 +36,24 @@ class PolySynth:
         output=True,
         frames_per_buffer=128)
         self._input_thread = threading.Thread(target=self.input_loop, daemon=True)
+        self._control_thread = threading.Thread(target=self.control_loop, daemon=True)
 
     def update_adsr_a(self, value):
         for adsr in self._adsrs:
-            adsr.a = value
+            adsr.a = value/64
 
     def update_adsr_d(self, value):
         for adsr in self._adsrs:
-            adsr.d = value
+            adsr.d = value/64
 
     def update_adsr_s(self, value):
         for adsr in self._adsrs:
-            adsr.s = value
+            adsr.s = value/64
 
     def update_adsr_r(self, value):
         for adsr in self._adsrs:
-            adsr.r = value
+            adsr.r = value/64
+
 
     def __next__(self):
         s = 0
@@ -70,8 +74,8 @@ class PolySynth:
 
     def update_oscilators_rack(self, index, freq, playing):
         self._freqs[index] = freq
-        for osc in self._oscilators_rack[index]:
-            osc.freq = freq
+        for i, osc in enumerate(self._oscilators_rack[index]):
+            osc.freq = freq*self._freq_coef[i]
             osc.is_on = playing
         self._adsrs[index].is_realising = not playing
 
@@ -89,12 +93,16 @@ class PolySynth:
                     
                     if len(t) != 0:
                         self.update_oscilators_rack(t[0], freq, True)
-                        
-                
                 else:
                     if velocity == 0:
                         self.update_oscilators_rack(res[0], 0, False)
-                        
+
+    def control_loop(self):
+        while True:
+            self._midi_input.read_control()
+            parameter, value = self._midi_input._parameter, self._midi_input._value
+            if parameter in self._update_dict:
+                self._update_dict[parameter](value)
 
 
     def sound_loop(self):    
@@ -109,7 +117,7 @@ class PolySynth:
 
     def main(self):
         self._input_thread.start()
-        #self._sound_thread.start()
+        self._control_thread.start()
         self.sound_loop()
         
 
