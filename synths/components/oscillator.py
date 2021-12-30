@@ -77,8 +77,9 @@ class Oscillator:
                 if b%2 == 1 :
                     val = 1-val
                 val = (val-0.5)*2
-            self._index = (self._index + self._step)%self._w
-
+            self._index = (self._index + self._step)
+            if self._index > self._w:
+                self._index = 0
             return val*self._amp
 
         else:

@@ -13,6 +13,7 @@ class ADSR:
         self._d = d #d is for decay
         self._s = s #s is for sustain
         self._r = r #r is for release
+        self._i = 0
         self._is_realising = False #This boolean is used to track when the note is off and the signal is released.
 
     @property
@@ -50,14 +51,20 @@ class ADSR:
     @is_realising.setter
     def is_realising(self, value):
         self._is_realising = value
+        self._i = 0
 
     @r.setter
     def r(self, value):
         self._r = value
 
+    def copy(self):
+        new = ADSR(a=self._a, d=self._d, s=self._s, r=self._r)
+        return new
 
-    def evaluate(self, i, n):
+    def evaluate(self, n):
         # This method evaluate the amplitude value at a given time (i, int) with a given sampling rate (n)
+        i = self._i
+        self._i = self._i + 1
         if not self._is_realising: 
             if i<self._a*n:
                 #Attack
@@ -71,6 +78,7 @@ class ADSR:
         else:
             #Release
             return max(0, i/(self._r*n)*(-self._s/self._r) + self._s)
+        
         
 
     def show(self, l, n):

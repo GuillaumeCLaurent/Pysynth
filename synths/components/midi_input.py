@@ -16,6 +16,7 @@ class Midi_Input:
             if status == 144 or status == 128:
                 self._note = pgm.midi_to_frequency(note)
                 self._velocity = velocity
+                print(self._note)
             else:
                 self._velocity = 0
                 self._note = 0

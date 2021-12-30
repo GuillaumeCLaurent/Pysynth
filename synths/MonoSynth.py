@@ -47,7 +47,7 @@ class MonoSynth:
         s = 0
         for osc in self._oscilators:
             s = s + osc.__next__()
-        val = self._adsr.evaluate(self._i, self._sample_rate)
+        val = self._adsr.evaluate(self._sample_rate)
         self._i = self._i + 1
         return val*s/self._n
 
